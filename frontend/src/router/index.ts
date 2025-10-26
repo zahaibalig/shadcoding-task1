@@ -6,8 +6,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'landing',
-      component: () => import('@/views/LandingView.vue'),
+      name: 'home',
+      component: () => import('@/views/HomeView.vue'),
       meta: { requiresAuth: false },
     },
     {
@@ -16,22 +16,22 @@ const router = createRouter({
       component: () => import('@/views/ProjectsView.vue'),
       meta: { requiresAuth: false },
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import('@/views/AboutView.vue'),
-    //   meta: { requiresAuth: false },
-    // },
+    {
+      path: '/car-registration',
+      name: 'carRegistration',
+      component: () => import('@/views/CarRegistrationView.vue'),
+      meta: { requiresAuth: false },
+    },
     {
       path: '/admin',
       name: 'adminLogin',
-      component: () => import('@/views/AdminDashboardView.vue'),
+      component: () => import('@/views/AdminLoginView.vue'),
       meta: { requiresAuth: false },
     },
     {
       path: '/admin/dashboard',
       name: 'adminDashboard',
-      component: () => import('@/views/HomeView.vue'),
+      component: () => import('@/views/AdminDashboardView.vue'),
       meta: { requiresAuth: true },
     },
   ],

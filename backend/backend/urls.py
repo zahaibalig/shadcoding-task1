@@ -14,4 +14,5 @@ urlpatterns = [
 
     # Our API
     path("api/", include("projects.urls")),
+    path("api/vehicles/", include("vehicles.urls")),
 ]

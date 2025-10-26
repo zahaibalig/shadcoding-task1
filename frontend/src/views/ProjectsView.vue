@@ -2,7 +2,7 @@
   <div class="projects-page">
     <header class="page-header">
       <div class="header-content">
-        <h1 class="page-title">Projects Gallery</h1>
+        <h1 class="page-title">Cars For Sale</h1>
         <router-link to="/" class="back-link">← Back to Home</router-link>
       </div>
     </header>
@@ -11,7 +11,7 @@
       <!-- Loading state -->
       <div v-if="loading" class="loading">
         <div class="spinner"></div>
-        <p>Loading projects...</p>
+        <p>Loading cars...</p>
       </div>
 
       <!-- Error state -->
@@ -22,7 +22,7 @@
 
       <!-- Empty state -->
       <div v-else-if="projects.length === 0" class="empty-state">
-        <p>No projects available at the moment.</p>
+        <p>No car available at the moment.</p>
       </div>
 
       <!-- Projects list -->
@@ -33,18 +33,23 @@
           class="project-card"
         >
           <div class="project-header">
-            <h3 class="project-name">{{ project.name }}</h3>
+            <h3 class="project-name">{{ project.car_name }}</h3>
             <span
               class="project-status"
               :class="{ active: project.is_active, inactive: !project.is_active }"
             >
-              {{ project.is_active ? 'Active' : 'Inactive' }}
+              {{ project.is_active ? 'Available' : 'Sold' }}
             </span>
           </div>
 
           <p class="project-description">
             {{ project.description || 'No description provided.' }}
           </p>
+
+          <div class="project-price">
+            <span class="price-label">Price:</span>
+            <span class="price-value">${{ project.price.toLocaleString() }}</span>
+          </div>
 
           <div class="project-meta">
             <div class="meta-item">
@@ -250,10 +255,32 @@ onMounted(async () => {
 }
 
 .project-description {
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   font-size: 14px;
   color: #666;
   line-height: 1.5;
+}
+
+.project-price {
+  margin: 0 0 16px 0;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 18px;
+  color: #28a745;
+  font-weight: 700;
 }
 
 .project-meta {
