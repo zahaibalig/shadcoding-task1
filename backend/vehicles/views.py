@@ -86,6 +86,13 @@ class VehicleLookupView(APIView):
                     status=status.HTTP_429_TOO_MANY_REQUESTS
                 )
 
+            elif response.status_code == 404:
+                # Vehicle not found with the given registration number
+                return Response(
+                    {'error': 'Please enter a correct registration number. Vehicle not found.'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
             else:
                 # Handle other error responses
                 error_message = response.text or 'Unknown error occurred'
