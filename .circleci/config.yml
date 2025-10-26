@@ -1,0 +1,161 @@
+version: 2.1
+
+# Define reusable executors
+executors:
+  python-executor:
+    docker:
+      - image: cimg/python:3.11
+    working_directory: ~/project
+
+  node-executor:
+    docker:
+      - image: cimg/node:20.19
+    working_directory: ~/project
+
+# Define jobs
+jobs:
+  # Backend tests
+  test-backend:
+    executor: python-executor
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - backend-deps-{{ checksum "requirements.txt" }}
+            - backend-deps-
+
+      - run:
+          name: Install Python dependencies
+          command: |
+            cd backend
+            pip install -r requirements.txt
+
+      - save_cache:
+          key: backend-deps-{{ checksum "requirements.txt" }}
+          paths:
+            - ~/.cache/pip
+
+      - run:
+          name: Run backend tests
+          command: |
+            cd backend
+            python manage.py test
+
+      - run:
+          name: Check for migrations
+          command: |
+            cd backend
+            python manage.py makemigrations --check --dry-run
+
+  # Frontend tests
+  test-frontend:
+    executor: node-executor
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - frontend-deps-{{ checksum "frontend/package-lock.json" }}
+            - frontend-deps-
+
+      - run:
+          name: Install Node dependencies
+          command: |
+            cd frontend
+            npm ci
+
+      - save_cache:
+          key: frontend-deps-{{ checksum "frontend/package-lock.json" }}
+          paths:
+            - frontend/node_modules
+
+      - run:
+          name: Run type check
+          command: |
+            cd frontend
+            npm run type-check
+
+      - run:
+          name: Run frontend tests
+          command: |
+            cd frontend
+            npm test -- --run
+
+  # Build frontend for production
+  build-frontend:
+    executor: node-executor
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - frontend-deps-{{ checksum "frontend/package-lock.json" }}
+
+      - run:
+          name: Install dependencies
+          command: |
+            cd frontend
+            npm ci
+
+      - run:
+          name: Build production bundle
+          command: |
+            cd frontend
+            npm run build
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend/dist
+
+  # Deploy to Ubuntu server
+  deploy:
+    executor: python-executor
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: .
+
+      - add_ssh_keys:
+          fingerprints:
+            - "${SSH_KEY_FINGERPRINT}"
+
+      - run:
+          name: Add server to known hosts
+          command: |
+            mkdir -p ~/.ssh
+            ssh-keyscan -H ${SERVER_IP} >> ~/.ssh/known_hosts
+
+      - run:
+          name: Deploy to server
+          command: |
+            # Copy deployment script to server
+            scp deployment/deploy.sh ${DEPLOY_USER}@${SERVER_IP}:/tmp/deploy.sh
+
+            # Copy frontend build
+            scp -r frontend/dist ${DEPLOY_USER}@${SERVER_IP}:/tmp/frontend-dist
+
+            # Execute deployment
+            ssh ${DEPLOY_USER}@${SERVER_IP} 'bash /tmp/deploy.sh'
+
+# Define workflows
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test-backend
+      - test-frontend
+      - build-frontend:
+          requires:
+            - test-frontend
+      - deploy:
+          requires:
+            - test-backend
+            - build-frontend
+          filters:
+            branches:
+              only:
+                - main
+                - master

@@ -1,0 +1,24 @@
+[Unit]
+Description=Gunicorn daemon for ShadCoding Django Backend
+After=network.target
+
+[Service]
+Type=notify
+# Replace with your actual deployment user
+User=deploy
+Group=www-data
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/deploy/shadcoding-task1/backend
+Environment="PATH=/home/deploy/shadcoding-task1/venv/bin"
+ExecStart=/home/deploy/shadcoding-task1/venv/bin/gunicorn \
+          --config /home/deploy/shadcoding-task1/backend/gunicorn.conf.py \
+          backend.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
