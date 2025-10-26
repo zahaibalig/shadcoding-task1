@@ -1,22 +1,16 @@
 <template>
+  <div class="car-registration-page">
     <header class="page-header">
-
+      <div class="header-content">
+        <h1 class="page-title">Check Car Registration</h1>
         <router-link to="/" class="back-link">← Back to Home</router-link>
-
+      </div>
+      <p class="page-description">
+        Enter a Norwegian car registration number to see vehicle details
+      </p>
     </header>
 
-  <div class="car-registration-page">
     <div class="container">
-      <div class="header">
-        <router-link to="/" class="back-link">
-          &larr; Back to Home
-        </router-link>
-        <h1 class="page-title">Check Car Registration</h1>
-        <p class="page-description">
-          Enter a Norwegian car registration number to see vehicle details
-        </p>
-      </div>
-
       <div class="search-section">
         <form @submit.prevent="handleSearch" class="search-form">
           <div class="input-group">
@@ -135,43 +129,57 @@ const handleSearch = async () => {
 .car-registration-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 20px;
+}
+
+/* Header with ProjectsView style */
+.page-header {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 32px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+}
+
+.back-link {
+  padding: 8px 16px;
+  background-color: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.back-link:hover {
+  background-color: #5568d3;
+}
+
+.page-description {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 16px;
+  color: #666;
+  text-align: center;
 }
 
 .container {
   max-width: 800px;
   margin: 0 auto;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.back-link {
-  display: inline-block;
-  color: white;
-  text-decoration: none;
-  font-size: 16px;
-  margin-bottom: 20px;
-  transition: opacity 0.3s ease;
-}
-
-.back-link:hover {
-  opacity: 0.8;
-}
-
-.page-title {
-  font-size: 42px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 12px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.page-description {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.9);
+  padding: 32px 20px;
 }
 
 .search-section {
@@ -327,8 +335,22 @@ const handleSearch = async () => {
 }
 
 @media (max-width: 768px) {
+  .page-header {
+    padding: 24px 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
   .page-title {
-    font-size: 32px;
+    font-size: 24px;
+  }
+
+  .container {
+    padding: 24px 16px;
   }
 
   .input-group {
