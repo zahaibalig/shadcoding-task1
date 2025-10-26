@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
 import type { Project } from '@/types/project'
+import type { Vehicle } from '@/types/vehicle'
 
 // API base URL - matches Django backend
 const API_BASE_URL = 'http://localhost:8000/api'
@@ -111,6 +112,18 @@ export const projectService = {
 
   async deleteProject(id: number): Promise<void> {
     await apiClient.delete(`/projects/${id}/`)
+  },
+}
+
+// Vehicle service
+export const vehicleService = {
+  async lookupRegistration(registrationNumber: string): Promise<Vehicle> {
+    const response = await apiClient.get('/vehicles/lookup/', {
+      params: {
+        registration: registrationNumber,
+      },
+    })
+    return response.data
   },
 }
 

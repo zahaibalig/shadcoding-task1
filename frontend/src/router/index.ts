@@ -16,6 +16,12 @@ const router = createRouter({
       component: () => import('@/views/ProjectsView.vue'),
       meta: { requiresAuth: false },
     },
+    {
+      path: '/car-registration',
+      name: 'carRegistration',
+      component: () => import('@/views/CarRegistrationView.vue'),
+      meta: { requiresAuth: false },
+    },
     // {
     //   path: '/about',
     //   name: 'about',

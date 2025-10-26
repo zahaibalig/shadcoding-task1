@@ -5,10 +5,14 @@
 
       <div class="button-group">
         <router-link to="/projects" class="btn btn-primary">
-          View Projects
+          Cars List
         </router-link>
 
-        <router-link to="/admin" class="btn btn-login">
+        <router-link to="/car-registration" class="btn btn-primary">
+          Car Details
+        </router-link>
+
+        <router-link to="/admin" class="btn btn-primary">
           Admin Login
         </router-link>
       </div>
