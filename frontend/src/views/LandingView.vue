@@ -1,7 +1,7 @@
 <template>
   <div class="landing-page">
     <div class="landing-container">
-      <h1 class="landing-title">Welcome to Project Gallery</h1>
+      <h1 class="landing-title">Buy any car</h1>
 
       <div class="button-group">
         <router-link to="/projects" class="btn btn-primary">

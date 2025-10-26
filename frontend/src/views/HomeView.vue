@@ -1,16 +1,16 @@
 <template>
   <div class="gallery-view">
     <header class="gallery-header">
+       <router-link to="/" class="back-link">← Back to Home</router-link>
       <div class="header-content">
         <div class="header-main">
           <h1 class="gallery-title">Admin Dashboard</h1>
-          <p class="gallery-subtitle">Manage your projects</p>
         </div>
         <div class="header-actions">
           <span v-if="authStore.user" class="user-info">
             Welcome, {{ authStore.user.username }}
           </span>
-          <button @click="openCreateModal" class="create-btn">+ New Project</button>
+          <button @click="openCreateModal" class="create-btn">+ New Car</button>
           <button @click="handleLogout" class="logout-btn">Logout</button>
         </div>
       </div>
@@ -20,7 +20,7 @@
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Search projects by name or description..."
+          placeholder="Search car by name"
           class="search-input"
         />
         <div class="filter-controls">
@@ -30,7 +30,7 @@
               type="checkbox"
               class="filter-checkbox"
             />
-            Show active only
+            Show only available cars
           </label>
         </div>
       </div>
@@ -45,7 +45,7 @@
       <!-- Loading state -->
       <div v-if="loading" class="loading">
         <div class="spinner"></div>
-        <p>Loading projects...</p>
+        <p>Loading Cars...</p>
       </div>
 
       <!-- Error state -->
@@ -57,10 +57,10 @@
       <!-- Empty state -->
       <div v-else-if="filteredProjects.length === 0" class="empty-state">
         <p v-if="projects.length === 0">
-          No projects found. Start by creating your first project!
+          No car found!
         </p>
         <p v-else>
-          No projects match your search criteria.
+          No car match your search criteria.
         </p>
       </div>
 
@@ -72,13 +72,13 @@
           class="project-card"
         >
           <div class="project-header">
-            <h3 class="project-name">{{ project.name }}</h3>
+            <h3 class="project-name">{{ project.car_name }}</h3>
             <div class="project-actions">
               <span
                 class="project-status"
                 :class="{ active: project.is_active, inactive: !project.is_active }"
               >
-                {{ project.is_active ? 'Active' : 'Inactive' }}
+                {{ project.is_active ? 'Available' : 'Sold' }}
               </span>
               <button @click="openEditModal(project)" class="action-btn edit-btn" title="Edit">
                 ✏️
@@ -92,6 +92,11 @@
           <p class="project-description">
             {{ project.description || 'No description provided.' }}
           </p>
+
+          <div class="project-price">
+            <span class="price-label">Price:</span>
+            <span class="price-value">${{ project.price.toLocaleString() }}</span>
+          </div>
 
           <div class="project-meta">
             <div class="meta-item">
@@ -111,21 +116,21 @@
     <div v-if="showModal" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h2>{{ isEditMode ? 'Edit Project' : 'Create New Project' }}</h2>
+          <h2>{{ isEditMode ? 'Edit Car' : 'Create New Car' }}</h2>
           <button @click="closeModal" class="close-btn">×</button>
         </div>
 
         <form @submit.prevent="handleSubmit" class="modal-form">
           <div class="form-group">
-            <label for="name">Project Name *</label>
+            <label for="car_name">Car Name *</label>
             <input
-              id="name"
-              v-model="formData.name"
+              id="car_name"
+              v-model="formData.car_name"
               type="text"
               required
               maxlength="120"
               class="form-input"
-              placeholder="Enter project name"
+              placeholder="Enter car name"
             />
           </div>
 
@@ -136,8 +141,21 @@
               v-model="formData.description"
               rows="4"
               class="form-input"
-              placeholder="Enter project description"
+              placeholder="Enter car description"
             ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Price *</label>
+            <input
+              id="price"
+              v-model.number="formData.price"
+              type="number"
+              required
+              min="0"
+              class="form-input"
+              placeholder="Enter price"
+            />
           </div>
 
           <div class="form-group">
@@ -147,7 +165,7 @@
                 type="checkbox"
                 class="form-checkbox"
               />
-              <span>Active</span>
+              <span>Available</span>
             </label>
           </div>
 
@@ -176,7 +194,7 @@
         </div>
 
         <div class="modal-body">
-          <p>Are you sure you want to delete <strong>{{ projectToDelete?.name }}</strong>?</p>
+          <p>Are you sure you want to delete <strong>{{ projectToDelete?.car_name }}</strong>?</p>
           <p class="warning-text">This action cannot be undone.</p>
         </div>
 
@@ -219,8 +237,9 @@ const formError = ref<string | null>(null)
 
 // Form data
 const formData = ref({
-  name: '',
+  car_name: '',
   description: '',
+  price: 0,
   is_active: true,
 })
 
@@ -245,7 +264,7 @@ const filteredProjects = computed(() => {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(
       (project) =>
-        project.name.toLowerCase().includes(query) ||
+        project.car_name.toLowerCase().includes(query) ||
         project.description.toLowerCase().includes(query)
     )
   }
@@ -294,8 +313,9 @@ const openCreateModal = () => {
   isEditMode.value = false
   editingProject.value = null
   formData.value = {
-    name: '',
+    car_name: '',
     description: '',
+    price: 0,
     is_active: true,
   }
   formError.value = null
@@ -306,8 +326,9 @@ const openEditModal = (project: Project) => {
   isEditMode.value = true
   editingProject.value = project
   formData.value = {
-    name: project.name,
+    car_name: project.car_name,
     description: project.description,
+    price: project.price,
     is_active: project.is_active,
   }
   formError.value = null
@@ -322,8 +343,8 @@ const closeModal = () => {
 }
 
 const handleSubmit = async () => {
-  if (!formData.value.name.trim()) {
-    formError.value = 'Project name is required'
+  if (!formData.value.car_name.trim()) {
+    formError.value = 'Car name is required'
     return
   }
 
@@ -686,10 +707,32 @@ onMounted(async () => {
 }
 
 .project-description {
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   font-size: 14px;
   color: #666;
   line-height: 1.5;
+}
+
+.project-price {
+  margin: 0 0 16px 0;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 18px;
+  color: #28a745;
+  font-weight: 700;
 }
 
 .project-meta {

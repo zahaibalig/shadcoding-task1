@@ -3,7 +3,7 @@
     <div class="login-container">
       <div class="login-card">
         <h1 class="login-title">Admin Login</h1>
-        <p class="login-subtitle">Sign in to manage items</p>
+        <p class="login-subtitle">Sign in to manage</p>
 
         <form @submit.prevent="handleLogin" class="login-form">
           <div class="form-group">

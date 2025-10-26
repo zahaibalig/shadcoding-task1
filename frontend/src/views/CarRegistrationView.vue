@@ -1,4 +1,10 @@
 <template>
+    <header class="page-header">
+
+        <router-link to="/" class="back-link">← Back to Home</router-link>
+
+    </header>
+
   <div class="car-registration-page">
     <div class="container">
       <div class="header">

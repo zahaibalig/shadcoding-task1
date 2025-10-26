@@ -2,8 +2,9 @@
 
 export interface Project {
   id: number
-  name: string
+  car_name: string
   description: string
+  price: number
   is_active: boolean
   created_at: string
   updated_at: string
