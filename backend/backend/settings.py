@@ -13,7 +13,8 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 # Statens Vegvesen API Key
 STATENS_VEGVESEN_API_KEY = config('STATENS_VEGVESEN_API_KEY', default='')
 
-ALLOWED_HOSTS = []
+# Read from .env: comma-separated list like "domain.com,www.domain.com,ip"
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 # URL Configuration
 ROOT_URLCONF = 'backend.urls'
@@ -88,6 +89,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5174",
 ]
 
+# Production CORS origins (read from .env if needed)
+# Add production domains to CORS_ALLOWED_ORIGINS if deploying
+if not DEBUG:
+    production_origins = config('CORS_ALLOWED_ORIGINS', default='').split(',')
+    CORS_ALLOWED_ORIGINS.extend([origin.strip() for origin in production_origins if origin.strip()])
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -119,6 +126,7 @@ REST_FRAMEWORK = {
 
 # Required when 'django.contrib.staticfiles' is enabled
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # --- Media uploads (optional, if you will upload files) ---
 # MEDIA_URL = "/media/"
@@ -129,3 +137,14 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Europe/Oslo"
 USE_I18N = True
 USE_TZ = True
+
+# Security Settings (Production)
+# Read from .env: comma-separated list of trusted origins
+csrf_origins = config('CSRF_TRUSTED_ORIGINS', default='')
+if csrf_origins:
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins.split(',') if origin.strip()]
+
+# SSL/HTTPS Settings
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
