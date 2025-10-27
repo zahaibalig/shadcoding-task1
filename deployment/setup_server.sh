@@ -32,8 +32,8 @@ apt-get upgrade -y
 echo ""
 echo "Step 2: Installing system dependencies..."
 apt-get install -y \
-    python3.11 \
-    python3.11-venv \
+    python3 \
+    python3-venv \
     python3-pip \
     nginx \
     git \
@@ -50,7 +50,7 @@ apt-get install -y nodejs
 # Verify installations
 echo ""
 echo "Verifying installations..."
-python3.11 --version
+python3 --version
 node --version
 npm --version
 nginx -v
@@ -87,7 +87,7 @@ chown -R deploy:deploy /home/deploy
 
 echo ""
 echo "Step 6: Creating Python virtual environment..."
-sudo -u deploy python3.11 -m venv "$PROJECT_DIR/venv"
+sudo -u deploy python3 -m venv "$PROJECT_DIR/venv"
 echo "Virtual environment created at $PROJECT_DIR/venv"
 
 echo ""
