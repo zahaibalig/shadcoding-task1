@@ -41,7 +41,7 @@ This is a **one-time setup** when deploying to a fresh server.
 ### Step 1: Connect to Your Server
 
 ```bash
-ssh ubuntu@18.223.101.101
+ssh ubuntu@18.217.70.110
 ```
 
 ### Step 2: Clone Your Repository
@@ -96,9 +96,9 @@ sudo systemctl restart nginx
 ### Step 6: Verify Installation
 
 Visit your application:
-- **Frontend**: http://18.223.101.101
-- **Admin Panel**: http://18.223.101.101/admin/
-- **API**: http://18.223.101.101/api/projects/
+- **Frontend**: http://18.217.70.110
+- **Admin Panel**: http://18.217.70.110/admin/
+- **API**: http://18.217.70.110/api/projects/
 
 ---
 
@@ -110,7 +110,7 @@ After making changes to your code, deploy updates using this script.
 
 ```bash
 # SSH to server
-ssh ubuntu@18.223.101.101
+ssh ubuntu@18.217.70.110
 
 # Switch to deploy user
 sudo su - deploy
@@ -246,7 +246,7 @@ sudo systemctl reload nginx
 sudo nano /home/deploy/shadcoding-task1/backend/.env
 
 # Make sure CORS_ALLOWED_ORIGINS includes your frontend URL
-CORS_ALLOWED_ORIGINS=http://18.223.101.101
+CORS_ALLOWED_ORIGINS=http://18.217.70.110
 
 # Restart Gunicorn
 sudo systemctl restart gunicorn
@@ -335,7 +335,7 @@ sudo chown -R deploy:deploy /var/log/gunicorn
 
 **Nginx**:
 - Listen: Port 80
-- Server Name: 18.223.101.101, zohaib.no
+- Server Name: 18.217.70.110, zohaib.no
 - Frontend: `/var/www/shadcoding/frontend/`
 - Upstream: `127.0.0.1:8000` (Gunicorn)
 

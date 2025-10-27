@@ -69,7 +69,7 @@ cd "$FRONTEND_DIR"
 # Backup api.ts
 cp src/services/api.ts src/services/api.ts.bak
 # Update API URL
-sed -i "s|http://localhost:8000/api|http://18.223.101.101/api|g" src/services/api.ts
+sed -i "s|http://localhost:8000/api|http://18.217.70.110/api|g" src/services/api.ts
 
 echo ""
 echo "Step 6: Installing frontend dependencies..."
@@ -104,7 +104,7 @@ echo ""
 sudo systemctl status nginx --no-pager | head -10
 echo ""
 echo "Application is now running at:"
-echo "  http://18.223.101.101"
+echo "  http://18.217.70.110"
 echo ""
 echo "To check logs:"
 echo "  Backend:  sudo journalctl -u gunicorn -f"

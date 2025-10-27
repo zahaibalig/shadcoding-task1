@@ -130,7 +130,7 @@ sudo -u deploy bash -c "cd $PROJECT_DIR/frontend && npm install"
 
 # Update API URL to production
 echo "Updating frontend API URL to production..."
-sudo -u deploy sed -i "s|http://localhost:8000/api|http://18.223.101.101/api|g" "$PROJECT_DIR/frontend/src/services/api.ts"
+sudo -u deploy sed -i "s|http://localhost:8000/api|http://18.217.70.110/api|g" "$PROJECT_DIR/frontend/src/services/api.ts"
 
 sudo -u deploy bash -c "cd $PROJECT_DIR/frontend && npm run build"
 
@@ -188,10 +188,10 @@ echo ""
 echo "Your application should now be running!"
 echo ""
 echo "Access your application at:"
-echo "  http://18.223.101.101"
+echo "  http://18.217.70.110"
 echo ""
 echo "Django Admin:"
-echo "  http://18.223.101.101/admin/"
+echo "  http://18.217.70.110/admin/"
 echo ""
 echo "IMPORTANT NEXT STEPS:"
 echo "1. Edit /home/deploy/shadcoding-task1/backend/.env with your actual values"

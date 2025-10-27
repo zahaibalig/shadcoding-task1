@@ -32,4 +32,4 @@ systemctl reload nginx
 echo "Done! Nginx is now using HTTP-only configuration."
 echo ""
 echo "Test with:"
-echo "  curl http://18.223.101.101/api/projects/"
+echo "  curl http://18.217.70.110/api/projects/"
