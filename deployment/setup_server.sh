@@ -101,7 +101,7 @@ if [ ! -f "$PROJECT_DIR/backend/.env" ]; then
     echo ".env file created. IMPORTANT: Edit $PROJECT_DIR/backend/.env with your actual values!"
     echo ""
     echo "Generating SECRET_KEY..."
-    SECRET_KEY=$(python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')
+    SECRET_KEY=$(python3 -c 'import secrets; print("".join(secrets.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)))')
     sudo -u deploy sed -i "s/your-secret-key-here-generate-a-new-one/$SECRET_KEY/" "$PROJECT_DIR/backend/.env"
     echo "SECRET_KEY generated and added to .env"
 else
