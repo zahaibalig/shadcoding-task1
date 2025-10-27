@@ -79,13 +79,16 @@ echo "  Done"
 # Step 8: Configure Nginx
 echo ""
 echo "[8/8] Configuring Nginx..."
-if [ ! -f /etc/nginx/sites-available/shadcoding ]; then
-    cp $APP_DIR/deployment/nginx.conf /etc/nginx/sites-available/shadcoding
-fi
+# Use HTTP-only config (no SSL) for initial setup
+cp $APP_DIR/deployment/nginx-http.conf /etc/nginx/sites-available/shadcoding
 ln -sf /etc/nginx/sites-available/shadcoding /etc/nginx/sites-enabled/shadcoding
 rm -f /etc/nginx/sites-enabled/default
-nginx -t && systemctl reload nginx
-echo "  Done"
+if nginx -t 2>&1 | grep -q "successful"; then
+    systemctl reload nginx
+    echo "  Done"
+else
+    echo "  Warning: Nginx config test failed"
+fi
 
 # Summary
 echo ""
