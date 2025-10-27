@@ -152,27 +152,28 @@ rm -f /etc/nginx/sites-enabled/default
 nginx -t
 
 echo ""
-echo "Step 14: Installing Gunicorn systemd service..."
+echo "Step 14: Creating log directories..."
+mkdir -p /var/log/gunicorn
+chown -R deploy:deploy /var/log/gunicorn
+echo "Log directory created at /var/log/gunicorn"
+
+echo ""
+echo "Step 15: Installing Gunicorn systemd service..."
 cp "$PROJECT_DIR/deployment/gunicorn.service" /etc/systemd/system/gunicorn.service
 systemctl daemon-reload
 systemctl enable gunicorn
 systemctl start gunicorn
 
 echo ""
-echo "Step 15: Starting Nginx..."
+echo "Step 16: Starting Nginx..."
 systemctl restart nginx
 
 echo ""
-echo "Step 16: Configuring UFW firewall..."
+echo "Step 17: Configuring UFW firewall..."
 ufw --force enable
 ufw allow OpenSSH
 ufw allow 'Nginx HTTP'
 ufw status
-
-echo ""
-echo "Step 17: Creating log directories..."
-mkdir -p /var/log/gunicorn
-chown -R deploy:deploy /var/log/gunicorn
 
 echo ""
 echo "=================================="
