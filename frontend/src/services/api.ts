@@ -3,7 +3,7 @@ import type { Project } from '@/types/project'
 import type { Vehicle } from '@/types/vehicle'
 
 // API base URL - matches Django backend
-const API_BASE_URL = 'http://localhost:8000/api'
+const API_BASE_URL = 'http://18.217.70.110/api'
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({

@@ -84,7 +84,7 @@ const fetchProjects = async () => {
 
   try {
     // Fetch projects without authentication
-    const response = await axios.get('http://localhost:8000/api/projects/')
+    const response = await axios.get('http://18.217.70.110/api/projects/')
     projects.value = response.data
   } catch (err: any) {
     console.error('Failed to fetch projects:', err)
