@@ -13,7 +13,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 # Statens Vegvesen API Key
 STATENS_VEGVESEN_API_KEY = config('STATENS_VEGVESEN_API_KEY', default='')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 # URL Configuration
 ROOT_URLCONF = 'backend.urls'

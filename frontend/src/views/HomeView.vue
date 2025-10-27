@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-// Home/Landing page component - no logic needed
 </script>
 
 <style scoped>
