@@ -19,7 +19,7 @@ NC='\033[0m' # No Color
 # Configuration
 DEPLOY_USER="deploy"
 APP_DIR="/home/$DEPLOY_USER/shadcoding-task1"
-DOMAIN="YOUR_DOMAIN"  # Replace with your domain
+DOMAIN="zohaib.no"  # Replace with your domain
 
 echo -e "${YELLOW}This script will:${NC}"
 echo "  1. Update system packages"

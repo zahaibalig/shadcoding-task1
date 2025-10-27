@@ -43,3 +43,6 @@ coverage/
 
 # OS / misc
 .DS_Store
+
+# Claude Code context file (personal use only)
+claude.md
