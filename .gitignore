@@ -78,5 +78,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Claude Code context file (personal use only)
+# Personal learning and context files (private, not for Git)
 claude.md
+CLAUDE.md
+MY_LEARNING_GUIDE.md
