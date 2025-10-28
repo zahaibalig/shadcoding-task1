@@ -32,6 +32,10 @@ db.sqlite3-journal
 .env.local
 .env.*.local
 
+# Deployment environment files with real secrets
+deployment/.env.production
+backend/.env.production
+
 # IDEs
 .vscode/
 .idea/
