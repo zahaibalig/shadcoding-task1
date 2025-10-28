@@ -9,12 +9,13 @@
 # What it does:
 # 1. Pull latest code from Git
 # 2. Install/update Python dependencies
-# 3. Update frontend API URL to production
-# 4. Build frontend
-# 5. Run Django migrations
-# 6. Collect Django static files
+# 3. Run Django migrations
+# 4. Collect Django static files
+# 5. Install frontend dependencies
+# 6. Build frontend (uses .env.production for API URL)
 # 7. Copy frontend build to Nginx directory
-# 8. Restart services
+# 8. Restart Gunicorn
+# 9. Reload Nginx
 ################################################################################
 
 set -e  # Exit on any error
@@ -64,33 +65,29 @@ echo "Step 4: Collecting Django static files..."
 python manage.py collectstatic --noinput
 
 echo ""
-echo "Step 5: Updating frontend API URL to production..."
+echo "Step 5: Installing frontend dependencies..."
 cd "$FRONTEND_DIR"
-# Backup api.ts
-cp src/services/api.ts src/services/api.ts.bak
-# Update API URL
-sed -i "s|http://localhost:8000/api|http://18.217.70.110/api|g" src/services/api.ts
-
-echo ""
-echo "Step 6: Installing frontend dependencies..."
 npm install
 
 echo ""
-echo "Step 7: Building frontend..."
+echo "Step 6: Building frontend for production..."
+# Vite automatically uses .env.production when building
 npm run build
+echo "Frontend build completed. Size:"
+du -sh dist/
 
 echo ""
-echo "Step 8: Copying frontend build to Nginx directory..."
+echo "Step 7: Copying frontend build to Nginx directory..."
 sudo rm -rf "$NGINX_DIR"/*
 sudo cp -r dist/* "$NGINX_DIR/"
 sudo chown -R www-data:www-data "$NGINX_DIR"
 
 echo ""
-echo "Step 9: Restarting Gunicorn..."
+echo "Step 8: Restarting Gunicorn..."
 sudo systemctl restart gunicorn
 
 echo ""
-echo "Step 10: Reloading Nginx..."
+echo "Step 9: Reloading Nginx..."
 sudo systemctl reload nginx
 
 echo ""

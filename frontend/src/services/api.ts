@@ -2,8 +2,10 @@ import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axio
 import type { Project } from '@/types/project'
 import type { Vehicle } from '@/types/vehicle'
 
-// API base URL - matches Django backend
-const API_BASE_URL = 'https://zohaib.no/api'
+// API base URL - uses environment variable with fallback
+// In production: Uses VITE_API_URL from .env.production
+// In development: Uses VITE_API_URL from .env.development or defaults to production URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://zohaib.no/api'
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({

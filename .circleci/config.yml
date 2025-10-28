@@ -40,13 +40,20 @@ jobs:
           name: Run backend tests
           command: |
             cd backend
-            python manage.py test
+            python manage.py test --verbosity=2
 
       - run:
           name: Check for migrations
           command: |
             cd backend
             python manage.py makemigrations --check --dry-run
+
+      - store_test_results:
+          path: backend/test-results
+
+      - store_artifacts:
+          path: backend/test-results
+          destination: test-results
 
   # Frontend tests
   test-frontend:
@@ -80,7 +87,14 @@ jobs:
           name: Run frontend tests
           command: |
             cd frontend
-            npm test -- --run
+            npm test -- --run --reporter=verbose
+
+      - store_test_results:
+          path: frontend/test-results
+
+      - store_artifacts:
+          path: frontend/test-results
+          destination: test-results
 
   # Build frontend for production
   build-frontend:
@@ -103,11 +117,18 @@ jobs:
           command: |
             cd frontend
             npm run build
+            echo "Build completed successfully at $(date)"
+            echo "Build size:"
+            du -sh dist/
 
       - persist_to_workspace:
           root: .
           paths:
             - frontend/dist
+
+      - store_artifacts:
+          path: frontend/dist
+          destination: frontend-build
 
   # Deploy to Ubuntu server
   deploy:
@@ -120,7 +141,7 @@ jobs:
 
       - add_ssh_keys:
           fingerprints:
-            - "${SSH_KEY_FINGERPRINT}"
+            - "SHA256:3GEkTkB/xpzQysu40+RO6L/g0JUxXIYQWQwy8h3FAog"
 
       - run:
           name: Add server to known hosts
@@ -129,16 +150,37 @@ jobs:
             ssh-keyscan -H ${SERVER_IP} >> ~/.ssh/known_hosts
 
       - run:
+          name: Verify SSH connection
+          command: |
+            echo "Testing SSH connection to ${DEPLOY_USER}@${SERVER_IP}..."
+            ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} 'echo "SSH connection successful!"'
+
+      - run:
           name: Deploy to server
           command: |
+            echo "Starting deployment to ${SERVER_IP}..."
+
             # Copy deployment script to server
+            echo "Copying deployment script..."
             scp deployment/deploy.sh ${DEPLOY_USER}@${SERVER_IP}:/tmp/deploy.sh
 
             # Copy frontend build
+            echo "Copying frontend build..."
             scp -r frontend/dist ${DEPLOY_USER}@${SERVER_IP}:/tmp/frontend-dist
 
             # Execute deployment
+            echo "Executing deployment script..."
             ssh ${DEPLOY_USER}@${SERVER_IP} 'bash /tmp/deploy.sh'
+
+            echo "Deployment completed successfully!"
+
+      - run:
+          name: Verify deployment
+          when: on_success
+          command: |
+            echo "Verifying services on server..."
+            ssh ${DEPLOY_USER}@${SERVER_IP} 'sudo systemctl is-active gunicorn && sudo systemctl is-active nginx'
+            echo "All services are running ✓"
 
 # Define workflows
 workflows:
