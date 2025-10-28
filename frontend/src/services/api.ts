@@ -5,7 +5,7 @@ import type { Vehicle } from '@/types/vehicle'
 // API base URL - uses environment variable with fallback
 // In production: Uses VITE_API_URL from .env.production
 // In development: Uses VITE_API_URL from .env.development or defaults to production URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://zohaib.no/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://zohaib.no/api'
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
