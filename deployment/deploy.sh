@@ -45,9 +45,9 @@ fi
 # Navigate to project directory
 cd "$PROJECT_DIR" || exit 1
 
-echo "Step 1: Pulling latest code from Git..."
+echo "Step 1: Syncing with latest code from Git..."
 git fetch origin
-git pull origin main
+git reset --hard origin/main
 
 echo ""
 echo "Step 2: Installing/updating Python dependencies..."
@@ -83,7 +83,8 @@ sudo cp -r dist/* "$NGINX_DIR/"
 sudo chown -R www-data:www-data "$NGINX_DIR"
 
 echo ""
-echo "Step 8: Restarting Gunicorn..."
+echo "Step 8: Reloading systemd and restarting Gunicorn..."
+sudo systemctl daemon-reload
 sudo systemctl restart gunicorn
 
 echo ""
